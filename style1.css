@@ -1,0 +1,123 @@
+body {
+        background-image: url('image.jpg'); /* file name */
+        background-size: cover; /* fill the screen */
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0;
+          
+  }
+  
+  .container {
+    
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+  }
+  
+  
+  .auth-container {
+    margin-top: 100px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  h1 {
+    color: white;
+    font-weight: bold;
+    font-size: 42px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* adds a shadow for visibility */
+  }
+  h2{
+    color: white;
+    font-weight: bold;
+    font-size: 40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  p {
+    color: black;
+    font-size: 20px;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+  }
+  h3{
+    color: black;
+    font-weight: bold;
+    font-size: 40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  
+  form input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background-color: #218838;
+  }
+  
+  .btn-group {
+    margin-top: 30px;
+  }
+  
+  .btn {
+    text-decoration: none;
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    margin: 10px;
+    display: inline-block;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+  }
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  .auth-container p {
+    color: black;
+    font-size: 14px;
+  }
+  
+  .auth-container a {
+    color: black;
+    text-decoration: underline;
+  }
+  
+  
+  

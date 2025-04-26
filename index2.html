@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGO Dashboard</title>
+  <link rel="stylesheet" href="style2.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .sidebar {
+      width: 200px;
+      background-color: rgba(51, 51, 51, 0.95);
+      color: white;
+      padding: 20px;
+      height: 100vh;
+      position: fixed; /* Make the sidebar fixed */
+      top: 0; /* Attach it to the top */
+      left: 0; /* Attach it to the left */
+      overflow-y: auto; /* Add scroll if content overflows */
+    }
+    .main-content {
+      flex-grow: 1;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      min-height: 100vh;
+      margin-left: 250px; /* Add margin to the main content to prevent overlap */
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <ul>
+      <li><a href="role.html">Home</a></li>
+      <li><a href="#available-donations">Available Donations</a></li>
+      <li><a href="#accepted-donations">Accepted Donations</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <h1>NGO Dashboard</h1>
+    <canvas id="donationChart" width="400" height="200"></canvas>
+    <form id="add-donation-form">
+    </form>
+
+    <h2 id="available-donations">Available Donations</h2>
+    <div class="filters">
+    </div>
+    <div id="donation-list"></div>
+
+    <h2 id="accepted-donations">Accepted Donations</h2>
+    <div id="accepted-donations-container"></div>
+  </div>
+
+  <script>
+    let donations = [
+      { id: 1, name: 'Food Donation 1', location: 'City A', expiry: 2 },
+      { id: 2, name: 'Food Donation 2', location: 'City B', expiry: 1 },
+      { id: 3, name: 'Food Donation 3', location: 'City A', expiry: 3 },
+      { id: 4, name: 'Food Donation 4', location: 'City C', expiry: 4 },
+      { id: 5, name: 'Food Donation 5', location: 'City D', expiry: 4 },
+      { id: 6, name: 'Food Donation 6', location: 'City E', expiry: 2 },
+      { id: 7, name: 'Food Donation 7', location: 'City D', expiry: 1 }
+    ];
+
+    let acceptedDonations = [];
+    let donationIdCounter = donations.length + 1;
+    let donationChart = null;
+
+    // Function to display donations on the screen
+    function displayDonations(donationArray) {
+      const donationList = document.getElementById('donation-list');
+      donationList.innerHTML = '';
+      if (donationArray.length === 0) {
+        donationList.innerHTML = '<p>No available donations.</p>';
+        return;
+      }
+      donationArray.forEach(donation => {
+        const donationCard = document.createElement('div');
+        donationCard.classList.add('donation-card');
+        donationCard.innerHTML = `
+          <h3>${donation.name}</h3>
+          <p>Location: ${donation.location}</p>
+          <p>Expiry: ${donation.expiry} Days</p>
+          <button onclick="acceptDonation(${donation.id})">Accept Donation</button>
+        `;
+        donationList.appendChild(donationCard);
+      });
+    }
+
+    // Function to display accepted donations
+    function displayAcceptedDonations(acceptedArray) {
+      const acceptedDonationsContainer = document.getElementById('accepted-donations-container');
+      acceptedDonationsContainer.innerHTML = '';
+      if (acceptedArray.length === 0) {
+        acceptedDonationsContainer.innerHTML = '<p>No accepted donations yet.</p>';
+        return;
+      }
+      acceptedArray.forEach(donation => {
+        const card = document.createElement('div');
+        card.classList.add('accepted-donation-card');
+        card.innerHTML = `
+          <h3>${donation.name}</h3>
+          <p>Location: ${donation.location}</p>
+          <p>Accepted: ${calculateDaysAgo(donation.acceptedAt)} days ago</p>
+        `;
+        acceptedDonationsContainer.appendChild(card);
+      });
+    }
+
+    // Helper function to calculate days ago
+    function calculateDaysAgo(date) {
+      const now = new Date();
+      const acceptedDate = new Date(date);
+      const differenceInTime = now.getTime() - acceptedDate.getTime();
+      const differenceInDays = Math.round(differenceInTime / (1000 * 3600 * 24));
+      return differenceInDays;
+    }
+
+    // Function to accept a donation
+    function acceptDonation(id) {
+      const index = donations.findIndex(d => d.id === id);
+      if (index !== -1) {
+        const donation = donations[index];
+        donations.splice(index, 1);
+        donation.acceptedAt = new Date().toISOString();
+        acceptedDonations.push(donation);
+        alert(`${donation.name} has been accepted!`);
+        displayDonations(donations);
+        displayAcceptedDonations(acceptedDonations);
+        renderChart();
+      }
+    }
+
+
+
+    // Function to render the donation bar chart
+    function renderChart() {
+      const cityCounts = donations.reduce((acc, curr) => {
+        acc[curr.location] = (acc[curr.location] || 0) + 1;
+        return acc;
+      }, {});
+
+      const ctx = document.getElementById('donationChart').getContext('2d');
+
+      // Destroy the old chart if it exists to prevent memory leaks and errors
+      if (donationChart) {
+        donationChart.destroy();
+      }
+
+      donationChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(cityCounts),
+          datasets: [{
+            label: 'Donations Available',
+            data: Object.values(cityCounts),
+            backgroundColor: '#3498db',
+            borderColor: '#2980b9',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+
+
+    // Initial display of donations and chart
+    document.addEventListener('DOMContentLoaded', () => {
+      displayDonations(donations);
+      displayAcceptedDonations(acceptedDonations);
+      renderChart();
+    });
+  </script>
+</body>
+</html>
